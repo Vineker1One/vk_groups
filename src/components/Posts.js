@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './Posts.css';
 
 const Posts = ({ domain }) => {
-    const [posts, setPosts] = useState([]);
+    const [allPosts, setAllPosts] = useState([]);
+    const [displayedPosts, setDisplayedPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [loadedCount, setLoadedCount] = useState(0);
+
+    const postsPerPage = 5;
+    const maxPosts = 40;
 
     const fetchPosts = () => {
         const script = document.createElement('script');
@@ -16,7 +21,9 @@ const Posts = ({ domain }) => {
                 setLoading(false);
                 return;
             }
-            setPosts(data.response.items);
+            setAllPosts(data.response.items);
+            setDisplayedPosts(data.response.items.slice(0, postsPerPage));
+            setLoadedCount(postsPerPage);
             setLoading(false);
         };
 
@@ -37,6 +44,12 @@ const Posts = ({ domain }) => {
         }
     }, [domain]);
 
+    const loadMorePosts = () => {
+        const newLoadedCount = Math.min(loadedCount + postsPerPage, maxPosts);
+        setDisplayedPosts(allPosts.slice(0, newLoadedCount));
+        setLoadedCount(newLoadedCount);
+    };
+
     if (loading) return <p>Загрузка...</p>;
     if (error) return <p>{error}</p>;
 
@@ -44,7 +57,7 @@ const Posts = ({ domain }) => {
         <div className="container_post">
             <h1>Посты из группы ВКонтакте</h1>
             <ul className="postList">
-                {posts.map(post => (
+                {displayedPosts.map(post => (
                     <li key={post.id} className="postItem">
                         {post.text && <h2 className="postText">{post.text}</h2>}
                         {post.attachments && post.attachments.map((attachment, index) => (
@@ -61,6 +74,11 @@ const Posts = ({ domain }) => {
                     </li>
                 ))}
             </ul>
+            {loadedCount < Math.min(allPosts.length, maxPosts) && (
+                <button className="loadMoreButton" onClick={loadMorePosts}>
+                    Показать еще
+                </button>
+            )}
         </div>
     );
 };
