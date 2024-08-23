@@ -1,4 +1,6 @@
 {
+  "homepage": "https://vineker1one.github.io/vk_groups",
+  
   "name": "vk-groups",
   "version": "0.1.0",
   "private": true,
@@ -7,6 +9,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "bootstrap": "^5.3.3",
+    "gh-pages": "^6.1.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
@@ -19,7 +22,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -39,4 +44,5 @@
       "last 1 safari version"
     ]
   }
+  
 }
